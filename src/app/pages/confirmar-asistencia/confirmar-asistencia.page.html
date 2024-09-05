@@ -1,0 +1,34 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Confirmar asistencia</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-accordion-group>
+    <ion-accordion>
+      <ion-item slot="header" color="light">
+        <ion-label>{{nombreCurso}}</ion-label>
+      </ion-item>
+
+      <div class="ion-padding" slot="content">
+        <ion-list>
+          <ion-item *ngIf="listaAlumnos.length===0">
+            <ion-label class="ion-text-center">No hay alumnos registrados</ion-label>
+          </ion-item>
+
+          <ion-item *ngFor="let idAlumno of listaAlumnos">
+            <ion-label>{{alumnosService.encontrarAlumnoPorId(idAlumno).nombre}}</ion-label>
+            <ion-label slot="end">
+              <ion-icon name="checkmark-circle-outline" color="success" *ngIf="claseService.alumnoAsistioClase(idAlumno, idClase)"></ion-icon>
+              <ion-icon name="close-circle-outline" color="danger" *ngIf="!claseService.alumnoAsistioClase(idAlumno, idClase)"></ion-icon>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+
+  <ion-button expand="block" class="ion-padding" (click)="confirmarAsistencia()">Confirmar asistencia</ion-button>
+  <ion-button expand="block" class="ion-padding" fill="clear" (click)="cancelarAsistencia()">Cancelar toma de asistencia</ion-button>
+</ion-content>

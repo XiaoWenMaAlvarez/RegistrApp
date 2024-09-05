@@ -1,0 +1,19 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Lista de cursos</ion-title>
+    <ion-icon name="log-out" slot="end" size="large" color="warning" (click)="logout()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-item lines="none" class="ion-text-center" *ngIf="cursos.length===0">
+    <ion-label>No hay cursos registrados</ion-label>
+  </ion-item>
+
+  <ion-list *ngIf="!(cursos.length===0)">
+    <ion-item *ngFor="let curso of cursos" (click)="(curso.id)">
+      <ion-label>{{curso.nombre + '_' + curso.seccion}}</ion-label>
+      <ion-label slot="end">{{claseService.calcularAsistenciaAlumno(idEstudiante, curso.id)}}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,20 @@
+ion-content ion-title {
+  padding-top: 3rem;
+  font-size: 32px;
+  color: #F2A516;
+  margin-bottom: 3rem;
+}
+
+ion-item {
+  margin-bottom: 2rem;
+}
+
+ion-button:last-of-type {
+  --color: #F2A516;
+}
+
+form ion-button {
+  padding-top: 5rem;
+  --background: #F2A516;
+  --color: #fff;
+}

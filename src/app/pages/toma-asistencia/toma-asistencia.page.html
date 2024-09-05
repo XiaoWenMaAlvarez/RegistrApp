@@ -1,0 +1,15 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Toma de asistencia</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-content class="ion-text-center">
+      <qrcode [qrdata]="contenidoQR" [width]="256" elementType="svg" [errorCorrectionLevel]="'M'"></qrcode>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="block" class="ion-padding" (click)="finalizarAsistencia()">Finalizar toma de asistencia</ion-button>
+</ion-content>

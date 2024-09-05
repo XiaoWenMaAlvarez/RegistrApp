@@ -1,0 +1,23 @@
+<ion-content [fullscreen]="true">
+  <ion-img src="../../../assets/img/logo.svg" alt="Logo de RegistrApp"></ion-img>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <ion-title class="ion-text-center ion-padding">Inicio de sesión</ion-title>
+    <ion-list>
+      <ion-item>
+        <ion-input placeholder="Correo institucional" type="email" class="ion-padding" formControlName="correo"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input placeholder="Contraseña" type="password"  class="ion-padding" formControlName="pass"></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <ion-button expand="block" class="ion-padding" fill="clear" routerLink="/olvidar-pass">¿Olvidaste tu contraseña?</ion-button>
+    <ion-button expand="block" class="ion-padding" type="submit">Inicia sesión</ion-button>
+
+  </form>
+  <div class="superior"></div>
+  <div class="inferior"></div>
+</ion-content>
+
