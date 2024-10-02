@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, ToastController, NavParams } from '@ionic/angular';
+import { NavController, ToastController, NavParams, LoadingController } from '@ionic/angular';
 import { ClaseService } from 'src/app/services/clase/clase.service';
 import { Geolocation } from '@capacitor/geolocation';
+import { Clase } from 'src/app/models/clase';
+import { FirebaseService } from 'src/app/services/firebase/firebase.service';
+import { ClaseAlumno } from 'src/app/models/clasealumno';
 
 @Component({
   selector: 'app-marcar-presente',
@@ -11,20 +14,36 @@ import { Geolocation } from '@capacitor/geolocation';
 export class MarcarPresentePage {
 
   public codigoQR;
-  public profesor;
-  public curso;
+  public profesor: string;
+  public curso: string;
   private idClase;
+  private clase: Clase;
 
   constructor(
-    private toastController: ToastController,
     private navController: NavController,
     private navParams:NavParams,
     private claseService: ClaseService,
+    private toastController: ToastController,
+    private loadingController: LoadingController,
+    private firebaseService: FirebaseService
   ) {
     this.codigoQR = {};
     this.profesor = "";
     this.curso = "";
-    this.idClase = 0;
+    this.idClase = '';
+  }
+
+  loading() {
+    return this.loadingController.create({spinner: "crescent"})
+  }
+
+  async presentToast(message: string, duration: number) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: duration,
+      position: 'top'
+    });
+    toast.present();
   }
 
   ionViewWillEnter() {
@@ -32,6 +51,19 @@ export class MarcarPresentePage {
     this.profesor = this.codigoQR.profesor;
     this.curso = this.codigoQR.curso;
     this.idClase = this.codigoQR.id_clase;
+    this.cargarClase(this.idClase)
+  }
+
+  async cargarClase(idClase: string){
+    const loading = await this.loading();
+    await loading.present();
+    let sub = this.claseService.encontrarClase(idClase).subscribe({
+      next: (data: Clase[]) => {
+        this.clase = data[0];
+        loading.dismiss();
+        sub.unsubscribe();
+      }
+    });
   }
 
   async marcarPresente() {
@@ -39,44 +71,43 @@ export class MarcarPresentePage {
 
     // VALIDAR HORA
     const horaActual = Date.now();
-    const horaValida = this.claseService.validarHora(horaActual, this.idClase);
+    const horaValida = this.claseService.validarHora(horaActual, this.clase.fecha);
 
     // VALIDAR LOCALIZACIÓN
     const coordenadasActuales = await Geolocation.getCurrentPosition();
     const latitudActual = coordenadasActuales.coords.latitude;
     const longitudActual = coordenadasActuales.coords.longitude;
-    const localizacionValida = this.claseService.validarLocalizacion(latitudActual, longitudActual, this.idClase);
+    const localizacionValida = this.claseService.validarLocalizacion(latitudActual, longitudActual, this.clase.latitud, this.clase.longitud);
 
     //VALIDACIÓN TOTAL
     if(!horaValida) {
-      const toast = await this.toastController.create({
-        message: "Hora inválida",
-        duration: 5000,
-        position: 'top'
-      });
-      await toast.present();
+      this.presentToast("Hora inválida",5000)
       this.navController.navigateForward('/estudiante/tabs/cursos');
       return;
     }
 
     if(!localizacionValida) {
-      const toast = await this.toastController.create({
-        message: "Ubicación inválida",
-        duration: 5000,
-        position: 'top'
-      });
-      await toast.present();
+      this.presentToast("Ubicación inválida",5000)
       this.navController.navigateForward('/estudiante/tabs/cursos');
       return;
     }
 
-    this.claseService.marcarPresente(idEstudiante, this.idClase);
-    const toast = await this.toastController.create({
-      message: "Has quedado presente!!!",
-      duration: 5000,
-      position: 'top'
-    });
-    await toast.present();
+    this.establecerPresencia(idEstudiante, this.idClase);
+    this.presentToast("Has quedado presente!!!",5000)
     this.navController.navigateForward('/estudiante/tabs/cursos');
+  }
+
+  async establecerPresencia(idEstudiante: string, idClase: string){
+    const loading = await this.loading();
+    await loading.present();
+    let sub = this.claseService.alumnoAsistioClase(idEstudiante, idClase).subscribe({
+      next: (data: ClaseAlumno[]) => {
+        let registro = data[0];
+        registro.esta_presente = true;
+        this.firebaseService.actualizarDocumento(`ClaseAlumno/${registro.id}`,registro);
+        loading.dismiss();
+        sub.unsubscribe();
+      }
+    });
   }
 }

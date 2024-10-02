@@ -1,5 +1,5 @@
 export interface CursoAlumno {
-  id:number;
-  id_curso: number;
-  id_alumno: number;
+  id:string;
+  id_curso: string;
+  id_alumno: string;
 }

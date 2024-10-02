@@ -1,6 +1,6 @@
 export interface Clase {
-  id:number;
-  id_curso: number;
+  id:string;
+  id_curso: string;
   fecha:number;
   latitud: number;
   longitud: number;

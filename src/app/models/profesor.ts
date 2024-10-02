@@ -1,6 +1,5 @@
 export interface Profesor {
-  id:number;
+  id:string;
   nombre:string;
   correo:string;
-  pass:string;
 }

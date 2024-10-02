@@ -18,7 +18,7 @@ export class LeerQrPage {
   ) { }
 
   private isValidQR(objeto) {
-    return objeto && objeto.id_curso && objeto.id_clase && objeto.profesor && objeto.curso && objeto.url
+    return objeto && objeto.id_curso && objeto.id_clase && objeto.profesor && objeto.curso
   }
 
   ionViewWillEnter() {
