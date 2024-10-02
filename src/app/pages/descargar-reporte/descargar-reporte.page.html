@@ -13,19 +13,19 @@
 
       <div class="ion-padding" slot="content">
         <ion-list>
-          <ion-item *ngIf="cursosService.listaAlumnos(idCurso).length===0">
+          <ion-item *ngIf="alumnos.length===0">
             <ion-label class="ion-text-center">No hay alumnos registrados</ion-label>
           </ion-item>
 
-          <ion-item *ngFor="let idAlumno of cursosService.listaAlumnos(idCurso)">
-            <ion-label>{{alumnosService.encontrarAlumnoPorId(idAlumno).nombre}}</ion-label>
-            <ion-label slot="end">{{claseService.calcularAsistenciaAlumno(idAlumno, idCurso)}}</ion-label>
+          <ion-item *ngFor="let alumno of alumnos">
+            <ion-label>{{alumno.nombre}}</ion-label>
+            <ion-label slot="end">{{calcularAsistencia(alumno.id)}}</ion-label>
           </ion-item>
         </ion-list>
       </div>
     </ion-accordion>
   </ion-accordion-group>
 
-  <ion-button expand="block" class="ion-padding" (click)="generarPDF()" [disabled]="cursosService.listaAlumnos(idCurso).length===0">Generar reporte en PDF</ion-button>
-  <ion-button expand="block" class="ion-padding" (click)="generarExcel()" [disabled]="cursosService.listaAlumnos(idCurso).length===0">Generar reporte en Excel</ion-button>
+  <ion-button expand="block" class="ion-padding" (click)="generarPDF()" [disabled]="alumnos.length===0">Generar reporte en PDF</ion-button>
+  <ion-button expand="block" class="ion-padding" (click)="generarExcel()" [disabled]="alumnos.length===0">Generar reporte en Excel</ion-button>
 </ion-content>

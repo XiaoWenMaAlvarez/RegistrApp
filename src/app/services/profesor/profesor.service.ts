@@ -1,43 +1,33 @@
-import { Injectable } from '@angular/core';
-import { Profesor } from 'src/app/models/profesor';
+import { inject, Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfesorService {
+  auth = inject(AngularFireAuth);
+  firestore = inject(AngularFirestore);
 
-  private profesor1: Profesor = {
-    "id": 1,
-    "nombre": "Erik Andrés Arcos Rojas",
-    "correo": "er.arcos@profesor.duoc.cl",
-    "pass": "profesor123"
+  encontrarProfesorPorId(id: string) {
+    return this.firestore.collection('profesor', ref => ref.where('id', '==', id)).valueChanges();
   }
-  public profesores:Profesor[] = [this.profesor1];
 
-  constructor() { }
-
-  encontrarProfesorPorId(id: number) { 
-    return this.profesores.find(profesor => profesor.id === id);
+  encontrarProfesorPorCorreo(correo: string) {
+    return this.firestore.collection('profesor', ref => ref.where('correo', '==', correo)).valueChanges();
   }
 
   login(correo: string, pass:string) {
-    let profesorEncontrado = this.profesores.find(profesor => profesor.correo === correo);
-    if (profesorEncontrado.pass === pass){
-      return profesorEncontrado.id
-    }else {
-      return 0;
-    }
+    return signInWithEmailAndPassword(getAuth(), correo, pass)
   }
 
   setearPass(correo: string) {
-    const nvoPass = Date.now().toString();
-    let profesorEncontrado = this.profesores.find(profesor => profesor.correo === correo);
-    if(profesorEncontrado) {
-      profesorEncontrado.pass = nvoPass;
-      console.log(nvoPass)
-      return true;
-    }
-    return false;
+    return sendPasswordResetEmail(getAuth(), correo)
+  }
+
+  logout() {
+    getAuth().signOut();
   }
   
 }

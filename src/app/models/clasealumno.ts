@@ -1,6 +1,6 @@
 export interface ClaseAlumno {
-  id:number;
-  id_clase: number;
-  id_alumno: number;
+  id:string;
+  id_clase: string;
+  id_alumno: string;
   esta_presente: boolean;
 }

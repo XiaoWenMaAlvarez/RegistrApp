@@ -1,6 +1,5 @@
 export interface Alumno {
-  id:number;
+  id:string;
   nombre:string;
   correo:string;
-  pass:string;
 }

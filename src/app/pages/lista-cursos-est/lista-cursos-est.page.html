@@ -11,9 +11,10 @@
   </ion-item>
 
   <ion-list *ngIf="!(cursos.length===0)">
-    <ion-item *ngFor="let curso of cursos" (click)="(curso.id)">
+    <ion-item *ngFor="let curso of cursos">
       <ion-label>{{curso.nombre + '_' + curso.seccion}}</ion-label>
-      <ion-label slot="end">{{claseService.calcularAsistenciaAlumno(idEstudiante, curso.id)}}</ion-label>
+      <ion-label slot="end" *ngIf="asistencia[curso.id]">{{asistencia[curso.id]}}</ion-label>
+      <ion-label slot="end" *ngIf="!asistencia[curso.id]">Sin asistencia</ion-label>
     </ion-item>
   </ion-list>
 </ion-content>

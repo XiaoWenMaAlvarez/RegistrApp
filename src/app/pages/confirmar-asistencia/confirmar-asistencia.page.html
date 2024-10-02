@@ -17,11 +17,11 @@
             <ion-label class="ion-text-center">No hay alumnos registrados</ion-label>
           </ion-item>
 
-          <ion-item *ngFor="let idAlumno of listaAlumnos">
-            <ion-label>{{alumnosService.encontrarAlumnoPorId(idAlumno).nombre}}</ion-label>
+          <ion-item *ngFor="let alumno of listaAlumnos">
+            <ion-label>{{alumno.nombre}}</ion-label>
             <ion-label slot="end">
-              <ion-icon name="checkmark-circle-outline" color="success" *ngIf="claseService.alumnoAsistioClase(idAlumno, idClase)"></ion-icon>
-              <ion-icon name="close-circle-outline" color="danger" *ngIf="!claseService.alumnoAsistioClase(idAlumno, idClase)"></ion-icon>
+              <ion-icon name="checkmark-circle-outline" color="success" *ngIf="listaAsistencia[alumno.id]"></ion-icon>
+              <ion-icon name="close-circle-outline" color="danger" *ngIf="!listaAsistencia[alumno.id]"></ion-icon>
             </ion-label>
           </ion-item>
         </ion-list>

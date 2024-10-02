@@ -19,14 +19,13 @@
       </ion-item>
 
       <div class="ion-padding" slot="content">
-        <ion-list>
-          <ion-item *ngIf="cursosService.listaAlumnos(curso.id).length === 0">
+        <ion-list *ngIf="alumnos[curso.id]">
+          <ion-item *ngIf="alumnos[curso.id].length === 0">
             <ion-label class="ion-text-center">No hay alumnos registrados</ion-label>
           </ion-item>
 
-          <ion-item *ngFor="let idAlumno of cursosService.listaAlumnos(curso.id)">
-            <ion-label>{{alumnosService.encontrarAlumnoPorId(idAlumno).nombre}}</ion-label>
-            <ion-label slot="end">{{claseService.calcularAsistenciaAlumno(idAlumno, curso.id)}}</ion-label>
+          <ion-item *ngFor="let alumno of alumnos[curso.id]">
+            <ion-label>{{alumno.nombre}}</ion-label>
           </ion-item>
         </ion-list>
       </div>
