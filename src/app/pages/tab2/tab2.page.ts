@@ -19,7 +19,6 @@ export class Tab2Page {
   public cursos: Curso[];
   nombre: string;
   cursoElegido: Curso;
-  agregado: boolean;
 
   constructor(
     public profesorService: ProfesorService,
@@ -32,7 +31,6 @@ export class Tab2Page {
     private firebaseService: FirebaseService
   ) {
     this.cursos = [];
-    this.agregado = false;
   }
 
   async presentToast(message: string, duration: number) {
@@ -87,13 +85,10 @@ export class Tab2Page {
             "id_clase": idClase,
             "esta_presente": false
           }
-          if(this.agregado) {
-            let response = this.firebaseService.agregarDocumento("ClaseAlumno", nvoRegistro);
-            nvoRegistro.id = (await response).id;
-            this.firebaseService.actualizarDocumento(`ClaseAlumno/${nvoRegistro.id}`,nvoRegistro)
-          }
+          let response = this.firebaseService.agregarDocumento("ClaseAlumno", nvoRegistro);
+          nvoRegistro.id = (await response).id;
+          this.firebaseService.actualizarDocumento(`ClaseAlumno/${nvoRegistro.id}`,nvoRegistro)
         }
-        this.agregado = true;
         loading.dismiss();
         sub.unsubscribe();
 
