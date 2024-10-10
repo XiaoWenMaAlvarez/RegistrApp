@@ -65,6 +65,7 @@ export class Tab3Page {
   logout() {
     this.profesorService.logout();
     this.navParams.data['idProfesor']  = 0;
+    localStorage.removeItem("login")
     this.navController.navigateForward('/login');
   }
 }

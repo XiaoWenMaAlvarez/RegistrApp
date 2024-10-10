@@ -127,6 +127,7 @@ export class ListaCursosEstPage  {
   logout() {
     this.alumnosService.logout();
     this.navParams.data['idAlumno']  = '';
+    localStorage.removeItem("login")
     this.navController.navigateForward('/login');
   }
 }

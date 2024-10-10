@@ -37,6 +37,7 @@ export class LoginPage {
   }
 
   ionViewWillEnter() {
+    localStorage.removeItem("login")
     if(this.navParams.data['idAlumno']  == ''){
       this.navParams.data['idAlumno']  == 'X';
       window.location.reload();
@@ -104,6 +105,7 @@ export class LoginPage {
       this.alumnosService.login(emailRecibido, passRecibida).then((res) => {
         this.obtenerNombreAlumno(res.user.uid);
         this.navParams.data['idAlumno'] = res.user.uid;
+        localStorage.setItem("login", "estudiante");
         this.form.reset()
         this.navController.navigateForward('estudiante/tabs/cursos');
       }).catch(async (err) => {
@@ -115,6 +117,7 @@ export class LoginPage {
       this.profesorService.login(emailRecibido, passRecibida).then((res) => {
         this.obtenerNombreProfesor(res.user.uid);
         this.navParams.data['idProfesor'] = res.user.uid;
+        localStorage.setItem("login", "profesor");
         this.form.reset()
         this.navController.navigateForward('profesor/tabs/tab1');
       }).catch(async (err) => {
