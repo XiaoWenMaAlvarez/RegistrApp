@@ -41,7 +41,7 @@ export class ClaseService {
 
   validarLocalizacion(latitudActual: number, longitudActual: number, latitudClase: number, longitudClase: number) {
     const distanciaEnMetros = diferenciaEnMetros(latitudClase, longitudClase, latitudActual, longitudActual);
-    if(distanciaEnMetros > 15) {
+    if(distanciaEnMetros > 100) {
       return false;
     }
     return true;
