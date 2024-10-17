@@ -19,6 +19,8 @@ export class Tab2Page {
   public cursos: Curso[];
   nombre: string;
   cursoElegido: Curso;
+  public latitud: number;
+  public longitud: number;
 
   constructor(
     public profesorService: ProfesorService,
@@ -42,10 +44,37 @@ export class Tab2Page {
     toast.present();
   }
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     const idProfesor = this.navParams.data['idProfesor'];
     this.obtenerCursos(idProfesor)
     this.obtenerNombreProfesor(idProfesor);
+
+    const loading = await this.loading();
+    await loading.present();
+    const coordenadas = await Geolocation.getCurrentPosition({
+      enableHighAccuracy: true,  
+      maximumAge: 0 
+    });
+    this.latitud = coordenadas.coords.latitude;
+    this.longitud = coordenadas.coords.longitude;
+    loading.dismiss();
+  }
+
+  async generarQR(id_curso: string) {
+    const loading = await this.loading();
+    await loading.present();
+    let nvaClase = {
+      "id_curso": id_curso,
+      "fecha": Date.now(),
+      "latitud": this.latitud,
+      "longitud": this.longitud,
+      "id": ""
+    }
+    const response = this.firebaseService.agregarDocumento("clase", nvaClase)
+    nvaClase.id = (await response).id;
+    this.firebaseService.actualizarDocumento(`clase/${nvaClase.id}`,nvaClase)
+    loading.dismiss();
+    this.obtenerCurso(id_curso, nvaClase.id);
   }
 
   loading() {
@@ -114,25 +143,6 @@ export class Tab2Page {
         sub.unsubscribe();
       }
     });
-  }
-
-  async generarQR(id_curso: string) {
-    const loading = await this.loading();
-    await loading.present();
-    const coordenadas = await Geolocation.getCurrentPosition();
-    let nvaClase = {
-      "id_curso": id_curso,
-      "fecha": Date.now(),
-      "latitud": coordenadas.coords.latitude,
-      "longitud": coordenadas.coords.longitude,
-      "id": ""
-    }
-
-    const response = this.firebaseService.agregarDocumento("clase", nvaClase)
-    nvaClase.id = (await response).id;
-    this.firebaseService.actualizarDocumento(`clase/${nvaClase.id}`,nvaClase)
-    loading.dismiss();
-    this.obtenerCurso(id_curso, nvaClase.id);
   }
 
   logout() {

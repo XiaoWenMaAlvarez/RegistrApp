@@ -18,6 +18,8 @@ export class MarcarPresentePage {
   public curso: string;
   private idClase;
   private clase: Clase;
+  public latitud: number;
+  public longitud: number;
 
   constructor(
     private navController: NavController,
@@ -46,12 +48,22 @@ export class MarcarPresentePage {
     toast.present();
   }
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.codigoQR = this.navParams.data['codigoQR'];
     this.profesor = this.codigoQR.profesor;
     this.curso = this.codigoQR.curso;
     this.idClase = this.codigoQR.id_clase;
     this.cargarClase(this.idClase)
+
+    const loading = await this.loading();
+    await loading.present();
+    const coordenadas = await Geolocation.getCurrentPosition({
+      enableHighAccuracy: true,  
+      maximumAge: 0 
+    });
+    this.latitud = coordenadas.coords.latitude;
+    this.longitud = coordenadas.coords.longitude;
+    loading.dismiss();
   }
 
   async cargarClase(idClase: string){
